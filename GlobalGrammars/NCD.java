@@ -1,6 +1,8 @@
 
 
 import java.io.*;
+import java.util.zip.Deflater;
+import java.util.zip.GZIPOutputStream;
 
 // Strictly assuming the input file is a music pitch file
 
@@ -71,7 +73,7 @@ public class NCD {
 		//return CFGGlobalAlgorithm.compressWithExistingGrammar(x, g, Constants.Greedy);
 		return smallest;
 	}
-	// Using the definition NCD(x,y) = (C(xy)-min{C(x), C(y)})  / max{C(x), C(y)}
+	// Using the definition NCD(x,y) = (C(xy)-min{C(x), C(y)})  / max{C(x), C(y)} with general purpose compressor
 	public static double MingVityaniNCDApproximation(String file1Name, String file2Name) {
 
 		FileReader file1 = null;
@@ -99,16 +101,67 @@ public class NCD {
 	    
 			String string1 = read (file1);
 			String string2 = read(file2);
-			String combinedString = string1 + " " + string2;
+			String combinedString = string1 + string2;
+			byte[] string1binary = string1.getBytes("UTF-8");
+			byte[] string2binary = string2.getBytes("UTF-8");
+			byte[] combinedbinary = combinedString.getBytes("UTF-8");
+			
+			//ZLIB compression
+//			Deflater compresser = new Deflater();
+//			byte[] compressed = new byte [Math.max(string1binary.length,Math.max(string2binary.length,combinedbinary.length))];
+//			
+//			compresser.setInput(string1binary);
+//			compresser.finish();
+//			
+//			double string1Kolmogorov = compresser.deflate(compressed);
+//			compresser.reset();
+//			
+//			compressed = new byte [Math.max(string1binary.length,Math.max(string2binary.length,combinedbinary.length))];
+//			compresser.setInput(string2binary);
+//			compresser.finish();
+//			
+//			double string2Kolmogorov = compresser.deflate(compressed);
+//			compresser.reset();
+//			
+//			compressed = new byte [Math.max(string1binary.length,Math.max(string2binary.length,combinedbinary.length))];
+//			compresser.setInput(combinedbinary);
+//			compresser.finish();
+//			
+//			double combinedKolmogorov = compresser.deflate(compressed);
+//			compresser.reset();
+			
+			
+			// GZIP compression
+			ByteArrayOutputStream string1outputstream = new ByteArrayOutputStream();
+			GZIPOutputStream string1gzip = new GZIPOutputStream(string1outputstream);
+			string1gzip.write(string1binary,0, string1binary.length);
+			string1gzip.close();
+			double string1Kolmogorov = string1outputstream.toByteArray().length;
+			
+			ByteArrayOutputStream string2outputstream = new ByteArrayOutputStream();
+			GZIPOutputStream string2gzip = new GZIPOutputStream(string2outputstream);
+			string2gzip.write(string2binary,0, string2binary.length);
+			string2gzip.close();
+			double string2Kolmogorov = string2outputstream.toByteArray().length;
+			
+			ByteArrayOutputStream combinedoutputstream = new ByteArrayOutputStream();
+			GZIPOutputStream combinedgzip = new GZIPOutputStream(combinedoutputstream);
+			combinedgzip.write(combinedbinary,0, combinedbinary.length);
+			combinedgzip.close();
+			double combinedKolmogorov = combinedoutputstream.toByteArray().length;
+			
+			//ncd = ((2*combinedKolmogorov)-string1Kolmogorov-string2Kolmogorov)/combinedKolmogorov;
+			
+			ncd = (combinedKolmogorov-Math.min(string1Kolmogorov, string2Kolmogorov))/Math.max(string1Kolmogorov, string2Kolmogorov);
 			// Getting the smallest grammar for C(xy)
-		    Grammar combinedSmallest = getSmallestCFG(combinedString);
-		    Grammar string1Smallest = getSmallestCFG (string1);
+//		    Grammar combinedSmallest = getSmallestCFG(combinedString);
+//		    Grammar string1Smallest = getSmallestCFG (string1);
 		    //System.out.println(file1Name);
 		    //System.out.println(string1Smallest.toString(true));
-		    Grammar string2Smallest = getSmallestCFG(string2);
+//		    Grammar string2Smallest = getSmallestCFG(string2);
 		    //System.out.println(file2Name);
 		    //System.out.println(string2Smallest.toString(true));
-		    ncd = (combinedSmallest.KolmogorovComplexity() - Math.min(string1Smallest.KolmogorovComplexity(), string2Smallest.KolmogorovComplexity())) / Math.max(string1Smallest.KolmogorovComplexity(), string2Smallest.KolmogorovComplexity());
+		    //ncd = (combinedSmallest.KolmogorovComplexity() - Math.min(string1Smallest.KolmogorovComplexity(), string2Smallest.KolmogorovComplexity())) / Math.max(string1Smallest.KolmogorovComplexity(), string2Smallest.KolmogorovComplexity());
 	    }
 	    catch (Exception e3) {
 			System.out.println(e3.getMessage());

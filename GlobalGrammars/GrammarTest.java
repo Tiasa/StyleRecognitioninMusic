@@ -26,19 +26,19 @@ public class GrammarTest {
 		Grammar smallest = null;
 		Grammar greedy = CFGGlobalAlgorithm.compress(x,Constants.Greedy);
 		Grammar mostFrequent = CFGGlobalAlgorithm.compress(x, Constants.MostFrequent);
-		//Grammar longest = CFGGlobalAlgorithm.compress(x, Constants.Longest);
+		Grammar longest = CFGGlobalAlgorithm.compress(x, Constants.Longest);
 		if(greedy.KolmogorovComplexity() < mostFrequent.KolmogorovComplexity()) {
-//			if (longest.KolmogorovComplexity() < greedy.KolmogorovComplexity()) {
-//				smallest = longest;
-//			} else {
+			if (longest.KolmogorovComplexity() < greedy.KolmogorovComplexity()) {
+				smallest = longest;
+			} else {
 				smallest = greedy;
-			//}
+			}
 		} else {
-//			if (longest.KolmogorovComplexity() < mostFrequent.KolmogorovComplexity()) {
-//				smallest = longest;
-//			} else {
+			if (longest.KolmogorovComplexity() < mostFrequent.KolmogorovComplexity()) {
+				smallest = longest;
+			} else {
 				smallest = mostFrequent;
-//			}
+			}
 		}
 		// For testing the longest pattern scheme
 		// Delete later
@@ -49,19 +49,19 @@ public class GrammarTest {
 		Grammar smallest = null;
 		Grammar greedy = CFGGlobalAlgorithm.compressWithExistingGrammar(x, g, Constants.Greedy);
 		Grammar mostFrequent = CFGGlobalAlgorithm.compressWithExistingGrammar(x, g, Constants.MostFrequent);
-		//Grammar longest = CFGGlobalAlgorithm.compressWithExistingGrammar (x, g, Constants.Longest);
+		Grammar longest = CFGGlobalAlgorithm.compressWithExistingGrammar (x, g, Constants.Longest);
 		if(greedy.KolmogorovComplexity() < mostFrequent.KolmogorovComplexity()) {
-//			if (longest.KolmogorovComplexity() < greedy.KolmogorovComplexity()) {
-//				smallest = longest;
-//			} else {
+			if (longest.KolmogorovComplexity() < greedy.KolmogorovComplexity()) {
+				smallest = longest;
+			} else {
 				smallest = greedy;
-			//}
+			}
 		} else {
-//			if (longest.KolmogorovComplexity() < mostFrequent.KolmogorovComplexity()) {
-//				smallest = longest;
-//			} else {
+			if (longest.KolmogorovComplexity() < mostFrequent.KolmogorovComplexity()) {
+				smallest = longest;
+			} else {
 				smallest = mostFrequent;
-			//}
+			}
 		}
 		//return CFGGlobalAlgorithm.compressWithExistingGrammar (x, g, Constants.Longest);
 		return smallest;
@@ -93,10 +93,9 @@ public class GrammarTest {
 			try {
 		    	String string1 = read (file1);
 				String string2 = read(file2);
-			    
-				String combinedSeparableString = string1 + separator+ string2;
+				String combinedSeparableString = string1 + separator + string2;
 			    Grammar combinedSeparableStringSmallest = getSmallestCFG(combinedSeparableString);
-			    //System.out.println(combinedSeparableStringSmallest.toString(true));
+			    System.out.println(combinedSeparableStringSmallest.toString(true));
 			    result = combinedSeparableStringSmallest.KolmogorovComplexity();
 				
 		    } catch (Exception e3) {
@@ -111,9 +110,9 @@ public class GrammarTest {
 				String string2 = read(file2);
 				
 				Grammar string1Smallest = getSmallestCFG (string1);
-				//System.out.println(string1Smallest);
+				System.out.println(string1Smallest.toString(true));
 			    Grammar string2Smallest = getSmallestCFG(string2);
-			    //System.out.println(string2Smallest);
+			    System.out.println(string2Smallest.toString(true));
 			    result = string1Smallest.KolmogorovComplexity() + string2Smallest.KolmogorovComplexity();			
 				
 		    } catch (Exception e3) {
@@ -126,32 +125,41 @@ public class GrammarTest {
 		return result;
 	}
 	public static void main(String[] args) {
-		if(args.length != 1)
+		if(args.length != 2)
 	    {
 	    	System.err.println("Incorrect Parameters Passed!\n");
 		    System.exit(1);
 	    }
+//		final String folder = args[0];
 		final String fileName1 = args[0];
-//		final String fileName2 = args[1];
+		final String fileName2 = args[1];
 		try {
-		FileReader file1 = new FileReader(fileName1);
-//		FileReader file2 = new FileReader(fileName2);
-		String string1 = read (file1);
-//		String string2 = read (file2);
-		
-		Grammar smallest1 = CFGGlobalAlgorithm.compress(string1, Constants.MostFrequent);
+			KofxANDyWithDef(1,fileName1,fileName2," 160 ");		
+			KofxANDyWithDef(2,fileName1,fileName2," 160 ");	
+		//Grammar smallest1 = getSmallestCFG(string1);
 //		Grammar smallest2 = getSmallestCFG(string2);
-		System.out.println(smallest1.toString(true));
+//		System.out.println(CFGGlobalAlgorithm.compress(string1, Constants.Greedy).toString(true));
+//		System.out.println(CFGGlobalAlgorithm.compress(string1, Constants.MostFrequent).toString(true));
+//		System.out.println(CFGGlobalAlgorithm.compress(string1, Constants.Longest).toString(true));
 //		System.out.println(smallest2.toString(true));
 //		Grammar mostFrequent = CFGGlobalAlgorithm.compress(string1, Constants.MostFrequent);
 //		System.out.println(mostFrequent.toString(true));
 //		Grammar longest = CFGGlobalAlgorithm.compress(string1, Constants.Longest);
 //		System.out.println(longest.toString(true));
-//		Grammar cond1 = getSmallestCFG(string1,smallest2);
-//		Grammar cond2 = getSmallestCFG(string2,smallest1);
-//		System.out.println(cond1.toString(true));
-//		System.out.println(cond2.toString(true));
-		//System.out.println(Double.toString(KofxANDyWithDef(Integer.parseInt(args[0]),args[1],args[2]," 1000 ")));
+		//Grammar cond1 = getSmallestCFG(string1,smallest2);
+		//Grammar cond2 = getSmallestCFG(string2,smallest1);
+		//System.out.println(cond1.toString(true));
+		//System.out.println(cond2.toString(true));
+		
+//			for (int step = 0; step < 3; step ++) {
+//				for (int def=1;def<=2;def++) {
+//					int numSteps = 1400 + (step * 100);
+//					String fileName1 = folder + "/numSteps" + Integer.toString(numSteps) +"/1_dt.pitch";
+//					String fileName2 = folder + "/numSteps" + Integer.toString(numSteps) +"/2_dt.pitch";
+//					KofxANDyWithDef(def,fileName1,fileName2," 160 ");
+//			}
+//		}
+//		System.out.println(Double.toString(KofxANDyWithDef(Integer.parseInt(args[0]),args[1],args[2]," 160  ")));
 		} catch(Exception e) {
 			System.out.println();
 		}

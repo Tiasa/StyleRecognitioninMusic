@@ -6,14 +6,18 @@ public class Rule implements Comparable
 {
   private Object _first = null;
   private Object _second = null;
+  // For Classification
+  private int _numberOfGrammarsUsingThisRule = 1;
 
-
-
+  public Rule(Object a, Object b, int num) {
+	  super();
+	  _first = a;
+	  _second = b;
+	  _numberOfGrammarsUsingThisRule = num;
+  }
   public Rule(Object a, Object b)
   {
-    super();
-    _first = a;
-    _second = b;
+    this(a,b,1);
   }
 
 
@@ -23,7 +27,15 @@ public class Rule implements Comparable
 
   public Object snd()
   {return _second;}
-
+  
+  //For Classification
+  public int getNumberOfGrammarsUsingThisRule() {
+	  return this._numberOfGrammarsUsingThisRule;
+  }
+  public void setNumberOfGrammarsUsingThisRule(int num) {
+	  this._numberOfGrammarsUsingThisRule = num;
+  }
+  /////////
   public void setFst(Object o)
   {_first = o;}
 

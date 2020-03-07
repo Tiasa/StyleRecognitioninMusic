@@ -3,9 +3,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 public class CFGGlobalAlgorithm {
-	//private static long startingNT = -3;
 	private static long axiom = -1; // axiom meaning the starting rule
-	//private static long sentinel = -1;
 	public CFGGlobalAlgorithm() {}
 	// Order the non-terminals
 	private static void buildCompressionDictionary(ArrayList<Long> dict, Grammar input , Long leftPart) {
@@ -55,6 +53,7 @@ public class CFGGlobalAlgorithm {
 	    String[] inputArray = input.trim().split("\\s+"); // For music
 	    //char[] inputArray = input.trim().toCharArray(); // for DNA
 	    result.addRule(axiom, new Long[inputArray.length]);
+	    result.setOriginalLength(inputArray.length);
 	    for (int k=0;k<inputArray.length;k++) {
 	    	result.getRule(axiom)[k] = new Long(Integer.parseInt(inputArray[k])); // For music
 	    	//mainRule[k] = new Long(inputArray[k]); // For DNA
@@ -138,6 +137,7 @@ public class CFGGlobalAlgorithm {
 	    String[] inputArray = input.trim().split("\\s+"); // For music
 	    //char[] inputArray = input.trim().toCharArray(); // for DNA
 	    result.addRule(axiom, new Long[inputArray.length]);
+	    result.setOriginalLength(inputArray.length);
 	    for (int k=0;k<inputArray.length;k++) {
 	    	result.getRule(axiom)[k] = new Long(Integer.parseInt(inputArray[k])); // For music
 	    	//mainRule[k] = new Long(inputArray[k]); // For DNA

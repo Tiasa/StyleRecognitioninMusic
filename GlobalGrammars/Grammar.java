@@ -12,7 +12,7 @@ public class Grammar {
   
   // Number of terminals
   private int sigmaSize;
-  
+  private int originalLength;
   public Grammar(String a) {
 	  this._algorithm = a;
   }
@@ -30,28 +30,39 @@ public Vector<Rule> getRules() {
   public void setSigmaSize(int size) {
 	  this.sigmaSize = size;
   }
+  public int getOriginalLength() {
+	  return this.originalLength;
+  }
+  public void setOriginalLength(int len) {
+	  this.originalLength = len;
+  }
+  public void addRule(long leftPart, Long[] rightPart)
+  {
+    this.addRule(leftPart, rightPart, 1);
+  }
+  
   @SuppressWarnings("unchecked")
-public void addRule(long leftPart, Long[] rightPart)
+public void addRule(long leftPart, Long[] rightPart, int num)
   {
     if(leftPart<0)
     {
-      Rule c = new Rule(new Long(leftPart),rightPart);
+      Rule c = new Rule(new Long(leftPart),rightPart, num);
       int index = Collections.binarySearch(_rules,c);
       if(index<0)
       {
         _rules.add((-index)-1,c);
         
-        
       } else {
     	  this.grammarSize -= ((Long[]) (((Rule)_rules.elementAt(index)).snd())).length;
     	  ((Rule)_rules.get(index)).setSnd(rightPart);
-    	  
+    	  ((Rule)_rules.get(index)).setNumberOfGrammarsUsingThisRule(num);
       }
       this.grammarSize += rightPart.length;
     }
   }
-
-  public boolean containsRule(long leftPart)
+  
+  @SuppressWarnings("unchecked")
+public boolean containsRule(long leftPart)
   {
     if(leftPart<0)
     {
@@ -80,7 +91,19 @@ public Long[] getRule(long leftPart)
     }
     return new Long[0];
   }
-
+  @SuppressWarnings("unchecked")
+  public Rule getRuleObject(long leftPart) {
+	  if(leftPart<0)
+	    {
+	      Rule c = new Rule(new Long(leftPart),null);
+	      int index = Collections.binarySearch(_rules,c);
+	      if(index>=0)
+	      {
+	        return  ((Rule)_rules.elementAt(index));
+	      }
+	    }
+	    return null;
+  }
   
 //private int getGrammarSize() {
 //	int result = 0;
@@ -99,13 +122,17 @@ public void setAxiom(long axiom)
       _axiom = axiom;
     }
   }
-
+  
+  public static double log2(int x)
+  {
+      return (double) (Math.log(x) / Math.log(2));
+  }
 
   public double KolmogorovComplexity()
   {
 	  // Size defined as Moses Charikar et al
 	  
-	  return (this._rules.size()+this.grammarSize) * Math.log(this._rules.size()+sigmaSize);
+	  return ((double)(this._rules.size()+this.grammarSize)) * log2(this._rules.size()+this.sigmaSize+1);
 		  
   }
   public String toString()
@@ -126,27 +153,28 @@ public void setAxiom(long axiom)
       if (printRules)
       {
         result += "T"+(-LHS)+" -> ";
+        //result += "T"+(-LHS)+" &\\rightarrow ";
         for(int j=0;j<RHS.length;j++)
         {
 
           if(RHS[j]>=0)
           {
             result += "'" + RHS[j].intValue()+"' "; 
+            //result += "" + RHS[j].intValue()+"\\;";
           }
           else
           {
-        	  if(RHS[j]==-1) {
-        		  result+="'$'";
-        	  } else {
         		  result += "T"+(-RHS[j])+" ";
-        	  }
+//        		  result += "T"+(-RHS[j])+"\\;";
           }
         }
         result +="\n";
+//        result += "\\\\\n";
       }
     }
+    
     result +="Algorithm : "+ this._algorithm +"\n" + "Size : "+ this.grammarSize +"\n" + "Rules : "+ numRules + "\n" + "Sigma : "+ this.sigmaSize + "\n"  +"Complexity : " + String.format("%.2f", KolmogorovComplexity());
     return result;
   }
-
+  
 }

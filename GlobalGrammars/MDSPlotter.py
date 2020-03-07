@@ -3,15 +3,17 @@ import matplotlib.pyplot as plt
 from matplotlib.pyplot import cm
 import subprocess
 import sys
-from mpl_toolkits.mplot3d import axes3d, Axes3D
+# from mpl_toolkits.mplot3d import axes3d, Axes3D
 
 def getDefName(definition):
     if definition == 1:
-        return "NCD(x,y) = max {C(x|y*),C(y|x*)} / max{C(x), C(y)}"
+        return "d(x,y) = max {K(x|y*),K(y|x*)} / max{K(x), K(y)}"
     elif definition == 2:
-        return "NCD(x,y) = (C(x|y*) + C(y|x*))/C(x,y)"
+        return "d(x,y) = (K(x|y*) + K(y|x*))/K(x,y)"
+    elif definition == 4:
+        return "d(x,y)=(K(xy)-min{K(x),K(y)})/ max{K(x),K(y)}"
     else:
-        return "NCD(x,y) = (C(x|y*) + C(y|x*))/C(x)+C(y)"
+        return "d(x,y) = (K(x|y*) + K(y|x*))/K(x)+K(y)"
 
 def TwoDimPlotter(output, plotFileName, outputFolder ,labelAxes):
     for fileNo in range(len(output)):
@@ -42,7 +44,7 @@ def TwoDimPlotter(output, plotFileName, outputFolder ,labelAxes):
             ax.scatter(x, y, alpha=1, c=color,
                        edgecolors='none', s=30, label=artist)
             #ax.annotate(artist, (x[0], y[0]))
-        plt.title('Clustering with '+ getDefName(int(output[fileNo].split(".")[0][-1])))
+        plt.title(getDefName(int(output[fileNo].split(".")[0][-1])))
         box = ax.get_position()
         ax.set_position([box.x0, box.y0 + box.height * 0.1,
                          box.width, box.height * 0.9])
@@ -83,7 +85,7 @@ def create3DPlot(pitchFolderLoc):
             artist = artists[i]
             ax.scatter(x, y, z, c=color,
                        label=artist)
-        plt.title('Clustering with ' + getDefName(int(output[fileNo].split(".")[0][-1])))
+        plt.title(getDefName(int(output[fileNo].split(".")[0][-1])))
         box = ax.get_position()
         ax.set_position([box.x0, box.y0 + box.height * 0.1,
                          box.width, box.height * 0.9])
@@ -126,7 +128,7 @@ def create2DPlotRock(outputFolderLoc):
 def testCombinedApproximationAccuracy(phylipGeneratorLoc, folderLoc):
     startingNumstep = 1400
     datapoints = []
-    kxyDefinition = ["K(x,y) = K(x1000y)","K(x,y) = K(x)+K(y)"]
+    kxyDefinition = ["K(x,y) = K(x100000y)","K(x,y) = K(x)+K(y)"]
     for definition in range(2):
         x = []
         y = []
@@ -148,7 +150,7 @@ def testCombinedApproximationAccuracy(phylipGeneratorLoc, folderLoc):
     colors = ["red", "blue", "green", "orange", "black",
               "violet"]  # [cmap(i) for i in np.linspace(0, 1, len(artists))]#
     fig = plt.figure(1)
-    ax = fig.add_subplot(1, 1, 1, facecolor="1.0")
+    ax = fig.add_subplot(1, 1, 1) #, facecolor="1.0")
     for i in range(2):
         # if artists[i]=="The Beatles" or artists[i]=="Prince" or artists[i]=="Elvis Presley" or artists[i]=="Simon and Garfunkel":
         x, y = datapoints[i]
@@ -175,6 +177,7 @@ if __name__=='__main__':
     #     phylipGeneratorLoc = arguments[1]
     #     folderLoc = arguments[2]
     #     testCombinedApproximationAccuracy(phylipGeneratorLoc,folderLoc)
+
     if len(arguments) == 3:
         phylipGeneratorLoc = arguments[1]
         pitchFolderLoc = arguments[2]
@@ -182,6 +185,7 @@ if __name__=='__main__':
                                 phylipGeneratorLoc + '/mdsj.jar:' + phylipGeneratorLoc,
                                 'Analyzer',
                                 pitchFolderLoc])
+        #print output
         create2DPlot(pitchFolderLoc)
 
 
