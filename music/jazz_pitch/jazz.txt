@@ -1,0 +1,36 @@
+giant_steps     1     Giant Steps     John Coltrane     1980
+blue_train      1     Blue Train      John Coltrane      1980
+impressions	1	Impression	John Coltrane     1961
+nature_boy	1	Nature Boy	John Coltrane     1961
+soultrane	1	Soultrane	John Coltrane     1961
+bessies_blues	1	Bessies Blues	John Coltrane     1961
+blues_by_five	1	Blues By Five	John Coltrane     1961
+body_and_soul	1	Body And Soul	John Coltrane     1961
+my_favorite_things	1	My Favorite Things	John Coltrane     1961
+nutty	1	Nutty	John Coltrane     1961
+oleo	1	Oleo	John Coltrane     1961
+agitation       1	Agitation       Miles Davis       1950
+so_what         1       So What          Miles Davis       1950
+blues_by_five    1      Blues by Five    Miles Davis       1950
+dolores       1       Dolores		Miles Davis       1950
+tune_up		1	Tune Up		Miles Davis       1950
+airegin		1	Airegin		Miles Davis       1950
+bitches_brew	1	Bitches Brew	Miles Davis       1950
+esp		1	ESP		Miles Davis       1950
+orbits		1	Orbits		Miles Davis       1950
+vierd_blues	1	Vierd Blues	Miles Davis       1950
+anthropology		1	Anthropology 	Dizzy Gillespie		1970
+cognac_blues		1	Cognac Blues		Dizzy Gillespie		1970
+hot_house		1	Hot House	Dizzy Gillespie		1970
+groovin_high		1	Groovin’ High		Dizzy Gillespie		1970
+i_fall_in_love_too_easily	1	I Fall in Love Too Easily  	Chet Baker	1930
+just_friends		1	Just Friends		Chet Baker		1930
+long_ago_and_far_away		1	Long Ago and Far Away		Chet Baker		1930
+there_will_never_be_another_you		1	There Will Never Be Another You		Chet Baker	1930
+blues_for_alice		1		Blues for Alice		Charlie Parker		1940
+donna_lee	1	Donna Lee		Charlie Parker		1940
+embraceable_you		1		Embraceable You		Charlie Parker		1940
+how_deep_is_the_ocean		1	How Deep Is the Ocean		Charlie Parker		1940
+ornithology		1		Ornithology		Charlie Parker		1940
+out_of_nowhere		1		Out of Nowhere		Charlie Parker		1940
+yardbird_suite		1		Yardbird Suite		Charlie Parker		1940
