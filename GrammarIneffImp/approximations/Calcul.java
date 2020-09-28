@@ -1,0 +1,261 @@
+
+package approximations;
+
+import java.io.*;
+
+public class Calcul {
+
+  public Calcul() {
+  }
+
+  public static String usage =
+    "Usage : java - cp . approximations.Calcul [Options] fichiers\n\n"
+    +"Options : \n\n"
+    +"  -LZ78 -L (Off|On) : Desactive/Active le cacul de LZ78\n"
+    +"  -BISECTION -B (Off|On) : Desactive/Active le cacul de BISECTION\n"
+    +"  -SEQUENTIAL -S (Off|On) : Desactive/Active le cacul de SEQUENTIAL\n"
+    +"  -GREEDY -G (Off|On) : Desactive/Active le cacul de GREEDY\n\n"
+    +"  Par defaut, tous les algos sont actives.\n\n"
+    +"Ex. : ... approximations.Calcul -GREEDY Off -LZ78 Off toto.txt\n"
+    +"      Compresse toto.txt avec les algos SEQUENTIAL et BISECTION";
+
+
+  public static String read(Reader reader) throws IOException
+  {
+      boolean over = false;
+      String _content = "";
+      int bufferSize = 1024;
+      char[] buffer = new char[bufferSize];
+      while(!over)
+      {
+        int r = reader.read(buffer);
+        if (r!=-1)
+        {
+          String tmp = String.valueOf(buffer,0,r);
+          _content = _content + tmp;
+        }
+        if (r<bufferSize) over = true;
+      }
+      return _content;
+  }
+
+  public static void main(String[] args)
+  {
+    if(args.length<1)
+    {
+      System.err.println("Pas assez de parametres !\n");
+      System.err.println(usage);
+      System.exit(1);
+    }
+    boolean LZ78_on = false;
+    boolean BISECTION_on = false;
+    boolean SEQUENTIAL_on = false;
+    boolean GREEDY_on = false;
+    Config.showProgress = false;
+
+    for(int i=0;i<args.length;i++)
+    {
+      if(args[i].equalsIgnoreCase("-LZ78")|args[i].equalsIgnoreCase("-L"))
+      {
+        if (i+1<args.length)
+        {
+          if(args[i+1].equalsIgnoreCase("ON"))
+          {
+            LZ78_on = true;
+            i++;
+          }
+          else
+          {
+            if(args[i+1].equalsIgnoreCase("OFF"))
+            {
+              LZ78_on = false;
+              i++;
+            }
+            else
+            {
+              System.err.println("\""+args[i+1]+"\" nst pas un parametre valide pour \""+args[i]+"\"");
+              System.err.println(usage);
+              System.exit(1);
+            }
+          }
+        }
+        else
+        {
+          System.err.println("Argument manquant pour \""+args[i]+"\"");
+          System.err.println(usage);
+          System.exit(1);
+        }
+      }
+      else
+      {
+      if(args[i].equalsIgnoreCase("-BISECTION")|args[i].equalsIgnoreCase("-B"))
+      {
+        if (i+1<args.length)
+        {
+          if(args[i+1].equalsIgnoreCase("ON"))
+          {
+            BISECTION_on = true;
+            i++;
+          }
+          else
+          {
+            if(args[i+1].equalsIgnoreCase("OFF"))
+            {
+              BISECTION_on = false;
+              i++;
+            }
+            else
+            {
+              System.err.println("\""+args[i+1]+"\" n'est pas un parametre valide pour \""+args[i]+"\"");
+              System.err.println(usage);
+              System.exit(1);
+            }
+          }
+        }
+        else
+        {
+          System.err.println("Argument manquant pour \""+args[i]+"\"");
+          System.err.println(usage);
+          System.exit(1);
+        }
+      }
+      else
+      {
+      if(args[i].equalsIgnoreCase("-SEQUENTIAL")|args[i].equalsIgnoreCase("-S"))
+      {
+        if (i+1<args.length)
+        {
+          if(args[i+1].equalsIgnoreCase("ON"))
+          {
+            SEQUENTIAL_on = true;
+            i++;
+          }
+          else
+          {
+            if(args[i+1].equalsIgnoreCase("OFF"))
+            {
+              SEQUENTIAL_on = false;
+              i++;
+            }
+            else
+            {
+              System.err.println("\""+args[i+1]+"\" nest pas un parametre valide pour \""+args[i]+"\"");
+              System.err.println(usage);
+              System.exit(1);
+            }
+          }
+        }
+        else
+        {
+          System.err.println("Argument manquant pour \""+args[i]+"\"");
+          System.err.println(usage);
+          System.exit(1);
+        }
+      }
+      else
+      {
+      if(args[i].equalsIgnoreCase("-GREEDY")|args[i].equalsIgnoreCase("-G"))
+      {
+        if (i+1<args.length)
+        {
+          if(args[i+1].equalsIgnoreCase("ON"))
+          {
+            GREEDY_on = true;
+            i++;
+          }
+          else
+          {
+            if(args[i+1].equalsIgnoreCase("OFF"))
+            {
+              GREEDY_on = false;
+              i++;
+            }
+            else
+            {
+              System.err.println("\""+args[i+1]+"\" n'est pas un parametre valide pour \""+args[i]+"\"");
+              System.err.println(usage);
+              System.exit(1);
+            }
+          }
+        }
+        else
+        {
+          System.err.println("Argument manquant pour \""+args[i]+"\"");
+          System.err.println(usage);
+          System.exit(1);
+        }
+      }
+      else
+      {
+      try
+      {
+        FileReader r = new FileReader(args[i]);
+        String sr = read(r);
+        if (LZ78_on)
+        {
+          String grammarFileName = args[i].split("\\.")[0]+".LZ78Grammar";
+          File grammarFile = new File(grammarFileName);
+    	  if (!grammarFile.exists()) {
+    		  grammarFile.createNewFile();
+              FileWriter fw = new FileWriter(grammarFile);
+              fw.write(LZ78.compress(sr).toString(false));
+              fw.close();
+    	  }
+          //Config.LZ78_out.println(LZ78.compress(sr).toString(true));
+        }
+        if (BISECTION_on)
+        {
+          String grammarFileName = args[i].split("\\.")[0]+".BisectionGrammar";
+          File grammarFile = new File(grammarFileName);
+     	  if (!grammarFile.exists()) {
+     		 grammarFile.createNewFile();
+             FileWriter fw = new FileWriter(grammarFile);
+             fw.write(Bisection.compress(sr).toString(false));
+             fw.close();
+     	  }
+          //Config.BISECTION_out.println(Bisection.compress(sr).toString(true));
+        }
+        if (SEQUENTIAL_on)
+        {
+          String grammarFileName = args[i].split("\\.")[0]+".SequentialGrammar";
+          File grammarFile = new File(grammarFileName);
+     	  if (!grammarFile.exists()) {
+     		 grammarFile.createNewFile();
+             FileWriter fw = new FileWriter(grammarFile);
+             fw.write(Sequential.compress(sr).toString(false));
+             fw.close();
+     	  }
+          //Config.SEQUENTIAL_out.println(Sequential.compress(sr).toString(true));
+        }
+        if (GREEDY_on)
+        {
+          String grammarFileName = args[i].split("\\.")[0]+".GreedyGrammar";
+          File grammarFile = new File(grammarFileName);
+     	  if (!grammarFile.exists()) {
+     		 grammarFile.createNewFile();
+             FileWriter fw = new FileWriter(grammarFile);
+             fw.write(Greedy.compress(sr).toString(true));
+             fw.close();
+     	  }
+          //Config.GREEDY_out.println(Greedy.compress(sr).toString(true));
+        }
+      }
+      catch(FileNotFoundException e2)
+      {
+          System.out.println("Erreur d'I/O pendant la lecture de \""+args[i]+"\" !");
+          System.out.println(usage);
+          System.exit(1);
+      }
+      catch(IOException e3)
+      {
+          System.out.println("Fichier \""+args[i]+"\" introuvable !");
+          System.out.println(usage);
+          System.exit(1);
+      }
+      }
+      }
+      }
+      }
+    }
+  }
+}
