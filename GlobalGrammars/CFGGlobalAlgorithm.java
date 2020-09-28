@@ -69,20 +69,21 @@ public class CFGGlobalAlgorithm {
 	  // Here we need to check how much can we compress with the given grammar
 	  long currentNT = axiom-1;
 	  long inputGrammarLastNT = currentNT;
-	  
+	  int usedRules = 0;
 	  while(dictionaryIterator.hasNext()) {
 		  currentNT = dictionaryIterator.next();
 		  Long[] RHS = inputGrammar.getRule(currentNT);
 		  PatriciaTree tree = new PatriciaTree(result);
 		  Pattern<Long> pattern = tree.findPatternOccurences(RHS);
 		  if (pattern!= null && pattern.frequency() > 1) {
+			  usedRules++;
 			  tree.smartReplace(pattern, currentNT);
 		  }
 		  if (currentNT < inputGrammarLastNT) {
 			  inputGrammarLastNT = currentNT;
 		  }
 	  }
-	  
+	  System.out.println(usedRules);
 	  boolean moreReductionPossible = true;
 	  currentNT = inputGrammarLastNT - 1; // we want to start where input grammar left off
 	  while(moreReductionPossible) {

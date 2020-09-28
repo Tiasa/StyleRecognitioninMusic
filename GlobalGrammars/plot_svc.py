@@ -73,19 +73,20 @@ def plot_contours(ax, clf, xx, yy, **params):
     """
     Z = clf.predict(np.c_[xx.ravel(), yy.ravel()])
     Z = Z.reshape(xx.shape)
-    out = ax.contourf(xx, yy, Z, **params)
+    out = ax.contour(xx, yy, Z, **params)
     return out
 
 
 # import some data to play with
 # Take the first two features. We could avoid this by using a two-dim dataset
-X = np.array([[-0.0240631753197078,-0.2990462866965766],[0.31338337701716545,-0.003062631066558111],[0.23734230715551424,0.12464314863499591],[0.05987546399905694,-0.21635964595991694],[-0.05339560472437975,0.15286026715229967],[0.3262249081728731,0.04316127294372796],[0.2158393246095433,-0.027583797035016504],[-0.06019512413984161,-0.30670377432779333],[-0.02901008889601607,0.2055256419269452],[0.21442245712064334,-0.03415466718842385],[-0.08817092658641001,0.1826517125906389],[0.2897540308975429,0.009783569299663984],
-[-0.1722406598035309,0.14115049149472778],[-0.14158417762960407,0.13979235089051034],[-0.14999825612979537,-0.06467796011148931],[-0.07128572146274145,0.24684109749584757],[-0.13731594183725712,-0.15426098386644513],[-0.11953540320962494,-0.22274100314343806],[-0.1369708105288605,0.06468883280045155]])
-y = np.array([0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1])
-
+X = np.array([[-0.09247323389218268,0.2466294321752115],[-0.07027286949439165,-0.1937072370144891],[-0.08720732800317273,-0.029934856041615394],[-0.08074463879940522,0.11630926398102068],[-0.09637792224964818,0.10159370167427159],[-0.07521878051138581,0.08412608578635243],[-0.07955571304330854,-0.011660522772630192],[-0.06487598576345029,-0.0042649355819467695],[-0.05008535270242511,-0.1552554387432704],[-0.09642177837023595,0.16853317638513998],[-0.04270432865114445,0.013893490868870368],[-0.10347991690009879,0.15371940908002663],[-0.06076305572130878,-0.04357144366871341],[-0.08287456276153873,0.11636956699286774],[-0.06007840929087117,-0.15543620854157641],
+[0.35514641532265456,-0.004697827961873162],[0.3842479938637321,0.04680905438491205],[0.3589487012070534,-0.0026906534527814004],[0.4114314599617854,0.0398872550616426],[0.3426255278985785,-0.02840620533573058],[0.3271808190495068,0.015722954320726897],[0.390851926621084,-0.009392487550451557],[0.3518286841915472,0.019937508631402263],[0.39133833717829253,0.042064375486458694],[0.14618814687559561,-0.135832691971789],[0.10005726519763576,-0.2367890054006197],[-0.01655369791293951,-0.26037178147915935],[0.0946032069277204,-0.257868103057796],[-0.03904932911580573,-0.29758271582378226],[0.054355647640420036,-0.1779406703726536]])
+y = np.array([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1])
+y2 = np.array([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1])
+artists = ["Nocturnes", "Preludes"]
 # we create an instance of SVM and fit out data. We do not scale our
 # data since we want to plot the support vectors
-C = 1 # SVM regularization parameter
+C = 0.5# SVM regularization parameter
 models = (svm.SVC(kernel='linear', C=C),
           svm.LinearSVC(C=C, max_iter=10000),
           svm.SVC(kernel='rbf', gamma=0.7, C=C))
@@ -99,7 +100,7 @@ plotFileNames = ('SVC_with_linear_kernel','LinearSVC','SVC_with_RBF_kernel')
 # Set-up 2x2 grid for plotting.
 # fig, sub = plt.subplots(3, 1)
 # plt.subplots_adjust(wspace=0.4, hspace=0.4)
-outputFolder = "/Users/Tiasa/Dropbox/UNIVERSITYofWATERLOO/Research/GlobalGrammars/tests"
+outputFolder = "/Users/Tiasa/Dropbox/UNIVERSITYofWATERLOO/Research/music/ISMIR Graphs"
 X0, X1 = X[:, 0], X[:, 1]
 xx, yy = make_meshgrid(X0, X1)
 i = 0
@@ -109,7 +110,23 @@ for clf, plotFileName, title in zip(models, plotFileNames, titles):#, sub.flatte
     ax = fig.add_subplot(1, 1, 1)
     plot_contours(ax, clf, xx, yy,
                   cmap=plt.cm.coolwarm, alpha=0.8)
-    ax.scatter(X0, X1, c=y, cmap=plt.cm.coolwarm, s=20, edgecolors='k')
+
+    currentArtist = y[0]
+    X0 = []
+    X1 = []
+    colors = ["red", "blue", "green", "orange", "black", "violet"]
+    for i in range(len(y2)):
+        if (y2[i]==currentArtist):
+            X0.append(X[i][0])
+            X1.append(X[i][1])
+        else:
+            color = colors[currentArtist]
+            ax.scatter(X0, X1, alpha=1, c=color,  s=30, edgecolors='none',label=artists[currentArtist])
+            currentArtist = y2[i]
+            X0 = []
+            X1 = []
+    color = colors[currentArtist]
+    ax.scatter(X0, X1, alpha=1, c=color, s=30, edgecolors='none', label=artists[currentArtist])
     ax.set_xlim(xx.min(), xx.max())
     ax.set_ylim(yy.min(), yy.max())
     ax.set_xlabel('Feature 1')
@@ -117,6 +134,14 @@ for clf, plotFileName, title in zip(models, plotFileNames, titles):#, sub.flatte
     ax.set_xticks(())
     ax.set_yticks(())
     ax.set_title(title)
+    box = ax.get_position()
+    # ax.legend()
+    ax.set_position([box.x0, box.y0 + box.height * 0.1,
+                     box.width, box.height * 0.9])
+    # ax.legend(loc='lower right', fancybox=True, shadow=True)
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
+              fancybox=True, shadow=True, ncol=len(artists))
+    #plt.show()
     fig.savefig(outputFolder + '/' + plotFileName + '.png', bbox_inches="tight")
     plt.close(fig)
 

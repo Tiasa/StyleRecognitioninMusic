@@ -197,7 +197,7 @@ public class Analyzer {
 //				for (String artist: Artists) {
 //					for (int i = 0; i<numObjects; i++) {
 //						if (objects.get(i).getArtist().compareTo(artist)==0) {
-//							SVCfw.write("["+new Double(coordinates[0][i]).toString()+","+new Double(coordinates[1][i]).toString()+"],");
+//							SVCfw.write("["+new Double(1.5*coordinates[0][i]).toString()+","+new Double(1.5*coordinates[1][i]).toString()+"],");
 //						}
 //						
 //					}
@@ -213,7 +213,7 @@ public class Analyzer {
 //				}
 //				SVCfw.write("]");
 				// Individual Artist
-					List<String> classification =  Arrays.asList("Prel","Etu");
+					List<String> classification =  Arrays.asList("Noc","Prel");
 					for (String group: classification) {
 						String groupName = "";
 						switch (group) {
@@ -348,7 +348,7 @@ public class Analyzer {
 		final String objectsFolder = args[0];
 		
 		DataSetArranger data = new DataSetArranger(objectsFolder, objectsFolder+"/"+objectsFolder.substring(objectsFolder.lastIndexOf("/")+1,objectsFolder.lastIndexOf("_"))+".txt");
-		List<String> Artists = Arrays.asList("Bach","Chopin","Haydn");
+		List<String> Artists = Arrays.asList("Chopin");
 		List<Song> objects = data.getSongsByArtist(Artists);
 		try {
 			int numObjects = objects.size();
@@ -992,13 +992,14 @@ public class Analyzer {
 		// First Intra corpora distance
 //		for (File corpus: listOfFolder) {
 //			if (corpus.isDirectory()) {
+//				System.out.println(corpus.getName());
 //				File[] listOfObjects = corpus.listFiles();
 //				double average = 0.0;
 //				for (int i=0; i<listOfObjects.length; i++) {
-//						if (listOfObjects[i].isFile()) {
+//						if (listOfObjects[i].getName().contains(".pitch")) {
 //							try {				
 //								for (int j=i+1;j<listOfObjects.length;j++) {
-//									if(listOfObjects[j].isFile() ) {								
+//									if(listOfObjects[j].getName().contains(".pitch") ) {								
 //										average += NCDWithDefinition(2, listOfObjects[i].getAbsolutePath(), listOfObjects[j].getAbsolutePath(), " 100000 ");
 //									}
 //								}
@@ -1011,19 +1012,20 @@ public class Analyzer {
 //				System.out.println("Intra corpora distance of "+corpus.getName()+"\t\t:"+Double.toString(average));
 //			}
 //		}
-//		
+		
 		// Then inter corpora distance
 		for (int i =0; i<listOfFolder.length; i++) {
 			if (listOfFolder[i].isDirectory()) {
 				File[] listOfObjectsGenrei = listOfFolder[i].listFiles();
 				for (int j=i+1;j<listOfFolder.length;j++) {
 					if (listOfFolder[j].isDirectory()) {
+						System.out.println(listOfFolder[i].getName()+"--"+listOfFolder[j].getName());
 						double average = 0.0;
 						File[] listOfObjectsGenrej = listOfFolder[j].listFiles();
 						for (int k=0; k<listOfObjectsGenrei.length;k++) {
-							if (listOfObjectsGenrei[k].isFile()) {
+							if (listOfObjectsGenrei[k].getName().contains(".pitch")) {
 								for (int l=0;l<listOfObjectsGenrej.length;l++) {
-									if (listOfObjectsGenrej[l].isFile()) {
+									if (listOfObjectsGenrej[l].getName().contains(".pitch")) {
 										try {
 											average += NCDWithDefinition(2, listOfObjectsGenrei[k].getAbsolutePath(), listOfObjectsGenrej[l].getAbsolutePath(), " 100000 ");
 										} catch (Exception e) {
@@ -1045,15 +1047,15 @@ public class Analyzer {
 	}
 	
 	public static void main(String[] args) {
-		generalAnalyzer(args);
-		//realWorldCompressorAnalyzer(args);
+		//generalAnalyzer(args);
+		realWorldCompressorAnalyzer(args);
 		//densityAnalyzer(args);
 		//rockAnalyzer(args,Arrays.asList("The Beatles", "The Rolling Stones", "Elvis Presley", "Prince"));
 		//rockAnalyzer(args,Arrays.asList("The Beatles", "The Rolling Stones"));
 		//DNAAnalyzer(args);
 		//composerClassification(args);
 		//listSongNames(args);
-		//compressionRatio(args);
+		//compressionRatio(args);	
 		//interIntraCorporaDistance(args);
 	}
 }
